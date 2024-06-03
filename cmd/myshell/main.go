@@ -19,6 +19,12 @@ func main() {
 			fmt.Println(err)
 			return
 		}
+
+		// Exit the program if the user types "exit"
+		if input == "exit 0\n" {
+			return
+		}
+
 		fmt.Printf("%s: command not found\n", input[:len(input)-1])
 
 	}
