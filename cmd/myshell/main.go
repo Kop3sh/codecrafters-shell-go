@@ -3,7 +3,9 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -15,18 +17,21 @@ func main() {
 		// Wait for user input
 		fmt.Fprint(os.Stdout, "$ ")
 		input, err := bufio.NewReader(os.Stdin).ReadString('\n')
+		str := input[:len(input)-1]
+		vals := strings.Fields(str)
+
 		if err != nil {
-			fmt.Println(err)
-			return
+			log.Fatal(err)
 		}
 
-		// Exit the program if the user types "exit"
-		if input == "exit 0\n" {
+		switch vals[0] {
+		case "echo":
+			fmt.Fprintf(os.Stdout, "%s\n", strings.Join(vals[1:], " "))
+		case "exit":
+			fmt.Fprintf(os.Stdout, "exit")
 			return
+		default:
+			fmt.Fprintf(os.Stdout, "%s: command not found\n", str)
 		}
-
-		fmt.Printf("%s: command not found\n", input[:len(input)-1])
-
 	}
-
 }
