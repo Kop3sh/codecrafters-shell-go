@@ -17,21 +17,35 @@ func main() {
 		// Wait for user input
 		fmt.Fprint(os.Stdout, "$ ")
 		input, err := bufio.NewReader(os.Stdin).ReadString('\n')
-		str := input[:len(input)-1]
-		vals := strings.Fields(str)
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		switch vals[0] {
-		case "echo":
-			fmt.Fprintf(os.Stdout, "%s\n", strings.Join(vals[1:], " "))
-		case "exit":
-			fmt.Fprintf(os.Stdout, "exit")
-			return
-		default:
-			fmt.Fprintf(os.Stdout, "%s: command not found\n", str)
+		str := strings.TrimSpace(input)
+		vals := strings.SplitN(str, " ", 2)
+
+		match_command(vals)
+	}
+}
+
+func match_command(vals []string)   {
+
+	switch vals[0] {
+	case "type":
+		args := vals[1]
+		if args == "echo" || args == "exit" || args == "type" {
+			fmt.Fprintf(os.Stdout, "%s is a shell builtin\n", vals[1])
+		} else {
+			fmt.Fprintf(os.Stdout, "%s: not found\n", args)
 		}
+	case "echo":
+		if len(vals) != 0 {
+			fmt.Fprintf(os.Stdout, "%s\n", strings.Join(vals[1:], " "))
+		}
+	case "exit":
+		os.Exit(0)
+	default:
+		fmt.Fprintf(os.Stdout, "%s: not found\n", strings.Join(vals[0:], " "))
 	}
 }
