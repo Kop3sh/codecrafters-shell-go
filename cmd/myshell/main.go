@@ -2,9 +2,11 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"log"
 	"os"
+	"path"
 	"strings"
 )
 
@@ -25,17 +27,24 @@ func main() {
 		str := strings.TrimSpace(input)
 		vals := strings.SplitN(str, " ", 2)
 
-		match_command(vals)
+
+
+		p := os.Getenv("PATH") 
+		match_command(vals, p)
 	}
 }
 
-func match_command(vals []string)   {
+func match_command(vals []string, env_path string)   {
 
 	switch vals[0] {
 	case "type":
 		args := vals[1]
+		
+
 		if args == "echo" || args == "exit" || args == "type" {
 			fmt.Fprintf(os.Stdout, "%s is a shell builtin\n", vals[1])
+		} else if  fp, err := match_executable_command(env_path, args); err == nil  {
+			fmt.Fprintf(os.Stdout, "%s is %s\n", args, fp)
 		} else {
 			fmt.Fprintf(os.Stdout, "%s: not found\n", args)
 		}
@@ -48,4 +57,16 @@ func match_command(vals []string)   {
 	default:
 		fmt.Fprintf(os.Stdout, "%s: not found\n", strings.Join(vals[0:], " "))
 	}
+}
+
+func match_executable_command(env_path string, command string) (string, error) {
+	paths := strings.Split(env_path, ":")
+
+	for _, p := range paths {
+		fp := path.Join(p, command)
+		if _, err := os.Stat(fp); err == nil {
+			return fp, nil
+		}
+	}
+	return "", errors.New("could not find executable")
 }
