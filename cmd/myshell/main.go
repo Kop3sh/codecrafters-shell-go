@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"path"
 	"strings"
 )
@@ -25,7 +26,7 @@ func main() {
 		}
 
 		str := strings.TrimSpace(input)
-		vals := strings.SplitN(str, " ", 2)
+		vals := strings.Split(str, " ")
 
 
 
@@ -55,7 +56,13 @@ func match_command(vals []string, env_path string)   {
 	case "exit":
 		os.Exit(0)
 	default:
-		fmt.Fprintf(os.Stdout, "%s: not found\n", strings.Join(vals[0:], " "))
+		cmd := exec.Command(vals[0], vals[1:]...)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+
+		if err := cmd.Run(); err != nil {
+			fmt.Fprintf(os.Stdout, "%s: not found\n", vals[0])
+		}
 	}
 }
 
