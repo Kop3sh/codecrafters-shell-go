@@ -10,15 +10,12 @@ import (
 )
 
 func main() {
-	// You can use print statements as follows for debugging, they'll be visible when running tests.
-	// fmt.Println("Logs from your program will appear here!")
-
-	// Uncomment this block to pass the first stage
 	reader := bufio.NewReader(os.Stdin)
+
 	for {
 		// Wait for user input
 
-		fmt.Print("$ ")
+		fmt.Print("\n$ ")
 		input, err := reader.ReadString('\n')
 
 		if err != nil {
@@ -27,8 +24,6 @@ func main() {
 
 		str := strings.TrimSpace(input)
 		vals := strings.Split(str, " ")
-
-
 
 		match_command(vals)
 	}
@@ -42,22 +37,22 @@ func match_command(vals []string)   {
 		
 
 		if arg == "echo" || arg == "exit" || arg == "type" || arg == "pwd" {
-			fmt.Fprintf(os.Stdout, "%s is a shell builtin\n", arg)
+			fmt.Fprintf(os.Stdout, "%s is a shell builtin", arg)
 		} else if fp, err := exec.LookPath(arg); err == nil {
-			fmt.Fprintf(os.Stdout, "%s is %s\n", arg, fp)
+			fmt.Fprintf(os.Stdout, "%s is %s", arg, fp)
 		} else {
-			fmt.Fprintf(os.Stdout, "%s: not found\n", arg)
+			fmt.Fprintf(os.Stdout, "%s: not found", arg)
 		}
 	case "echo":
 		if len(vals) != 0 {
-			fmt.Fprintf(os.Stdout, "%s\n", strings.Join(vals[1:], " "))
+			fmt.Fprintf(os.Stdout, "%s", strings.Join(vals[1:], " "))
 		}
 	case "pwd":
 		var wd, err = os.Getwd()
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Fprintf(os.Stdout, "%s\n", wd)
+		fmt.Fprintf(os.Stdout, "%s", wd)
 	case "exit":
 		os.Exit(0)
 	default:
@@ -66,7 +61,7 @@ func match_command(vals []string)   {
 		cmd.Stderr = os.Stderr
 
 		if err := cmd.Run(); err != nil {
-			fmt.Fprintf(os.Stdout, "%s: not found\n", vals[0])
+			fmt.Fprintf(os.Stdout, "%s: not found", vals[0])
 		}
 	}
 }
