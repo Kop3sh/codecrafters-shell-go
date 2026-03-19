@@ -14,10 +14,12 @@ func main() {
 	// fmt.Println("Logs from your program will appear here!")
 
 	// Uncomment this block to pass the first stage
+	reader := bufio.NewReader(os.Stdin)
 	for {
 		// Wait for user input
-		fmt.Fprint(os.Stdout, "$ ")
-		input, err := bufio.NewReader(os.Stdin).ReadString('\n')
+
+		fmt.Print("$ ")
+		input, err := reader.ReadString('\n')
 
 		if err != nil {
 			log.Fatal(err)
