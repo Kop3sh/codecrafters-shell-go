@@ -10,17 +10,17 @@ import (
 )
 
 func main() {
-	reader := bufio.NewReader(os.Stdin)
-
 	for {
-		fmt.Print("$ ")
-		os.Stdout.Sync()
+		fmt.Fprint(os.Stdout, "$ ")
 
+		// Read input
+		reader := bufio.NewReader(os.Stdin)
 		input, err := reader.ReadString('\n')
 
 		if err != nil {
+			// Handle Ctrl+D (EOF) so the shell exits cleanly
 			if err.Error() == "EOF" {
-				os.Exit(0)
+				break
 			}
 			log.Fatal(err)
 		}
@@ -29,10 +29,15 @@ func main() {
 		if str == "" {
 			continue
 		}
-		vals := strings.Split(str, " ")
 
-		match_command(vals)
+		// Use strings.Fields instead of strings.Split to handle multiple spaces
+		vals := strings.Fields(str)
+		
+		if len(vals) > 0 {
+			match_command(vals)
+		}
 	}
+	os.Exit(0)
 }
 
 func match_command(vals []string)   {
