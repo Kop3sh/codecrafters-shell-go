@@ -13,8 +13,6 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
-		// Wait for user input
-
 		fmt.Print("$ ")
 		os.Stdout.Sync()
 
@@ -28,6 +26,9 @@ func main() {
 		}
 
 		str := strings.TrimSpace(input)
+		if str == "" {
+			continue
+		}
 		vals := strings.Split(str, " ")
 
 		match_command(vals)
