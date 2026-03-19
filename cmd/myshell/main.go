@@ -28,24 +28,23 @@ func main() {
 
 
 
-		p := os.Getenv("PATH") 
-		match_command(vals, p)
+		match_command(vals)
 	}
 }
 
-func match_command(vals []string, env_path string)   {
+func match_command(vals []string)   {
 
 	switch vals[0] {
 	case "type":
-		args := vals[1]
+		arg := vals[1]
 		
 
-		if args == "echo" || args == "exit" || args == "type" || args == "pwd" {
-			fmt.Fprintf(os.Stdout, "%s is a shell builtin\n", vals[1])
-		} else if fp, err := exec.LookPath(args); err == nil {
-			fmt.Fprintf(os.Stdout, "%s is %s\n", args, fp)
+		if arg == "echo" || arg == "exit" || arg == "type" || arg == "pwd" {
+			fmt.Fprintf(os.Stdout, "%s is a shell builtin\n", arg)
+		} else if fp, err := exec.LookPath(arg); err == nil {
+			fmt.Fprintf(os.Stdout, "%s is %s\n", arg, fp)
 		} else {
-			fmt.Fprintf(os.Stdout, "%s: not found\n", args)
+			fmt.Fprintf(os.Stdout, "%s: not found\n", arg)
 		}
 	case "echo":
 		if len(vals) != 0 {
