@@ -15,7 +15,9 @@ func main() {
 	for {
 		// Wait for user input
 
-		fmt.Print("\n$ ")
+		fmt.Print("$ ")
+		os.Stdout.Sync()
+
 		input, err := reader.ReadString('\n')
 
 		if err != nil {
@@ -37,22 +39,22 @@ func match_command(vals []string)   {
 		
 
 		if arg == "echo" || arg == "exit" || arg == "type" || arg == "pwd" {
-			fmt.Fprintf(os.Stdout, "%s is a shell builtin", arg)
+			fmt.Fprintf(os.Stdout, "%s is a shell builtin\n", arg)
 		} else if fp, err := exec.LookPath(arg); err == nil {
-			fmt.Fprintf(os.Stdout, "%s is %s", arg, fp)
+			fmt.Fprintf(os.Stdout, "%s is %s\n", arg, fp)
 		} else {
-			fmt.Fprintf(os.Stdout, "%s: not found", arg)
+			fmt.Fprintf(os.Stdout, "%s: not found\n", arg)
 		}
 	case "echo":
 		if len(vals) != 0 {
-			fmt.Fprintf(os.Stdout, "%s", strings.Join(vals[1:], " "))
+			fmt.Fprintf(os.Stdout, "%s\n", strings.Join(vals[1:], " "))
 		}
 	case "pwd":
 		var wd, err = os.Getwd()
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Fprintf(os.Stdout, "%s", wd)
+		fmt.Fprintf(os.Stdout, "%s\n", wd)
 	case "exit":
 		os.Exit(0)
 	default:
@@ -61,7 +63,7 @@ func match_command(vals []string)   {
 		cmd.Stderr = os.Stderr
 
 		if err := cmd.Run(); err != nil {
-			fmt.Fprintf(os.Stdout, "%s: not found", vals[0])
+			fmt.Fprintf(os.Stdout, "%s: not found\n", vals[0])
 		}
 	}
 }
