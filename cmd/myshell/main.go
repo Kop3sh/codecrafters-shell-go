@@ -21,6 +21,9 @@ func main() {
 		input, err := reader.ReadString('\n')
 
 		if err != nil {
+			if err.Error() == "EOF" {
+				os.Exit(0)
+			}
 			log.Fatal(err)
 		}
 
